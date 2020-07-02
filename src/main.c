@@ -424,19 +424,13 @@ void draw_game_won(app_t* app)
 	console_goto(stdout, text_x, text_y + 4);  printf("                                  |_|\n");
 	console_reset_fg_color(stdout);
 
-	console_goto(stdout, 41, 2);
-	console_fg_color_8(stdout, CONSOLE_COLOR8_BRIGHT_YELLOW);
-	printf("TODAY");
-	console_reset_fg_color(stdout);
-
-
 	console_goto(stdout, 38, 7);
 	console_fg_color_8(stdout, CONSOLE_COLOR8_BRIGHT_YELLOW);
 	printf("THE HANGMAN");
 	console_reset_fg_color(stdout);
 
 	console_goto(stdout, 30, 12); printf("YOUR FAMILY WANTS YOU TO TURN");
-	console_goto(stdout, 30, 13); printf("AWAY FROM A LIFE OF CRIME.");
+	console_goto(stdout, 30, 13); printf(" AWAY FROM A LIFE OF CRIME.");
 
 	int cowboy_x = 4;
 	int cowboy_y = 6;
@@ -499,7 +493,7 @@ int main( int argc, char* argv[] )
 	console_echo_disable(stdin);
 	console_canonical_disable(stdin);
 
-	console_set_size(stdout, 80, 25 );
+	//console_set_size(stdout, 80, 25 );
 	resize(&app);
 
 
