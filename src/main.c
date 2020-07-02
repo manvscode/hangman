@@ -322,7 +322,7 @@ void draw_game(app_t* app)
 				{
 					app->state = WIN;
 				}
-				else if( app->moves_left == 0 )
+				else if( app->moves_left < 0 )
 				{
 					app->state = GAME_OVER;
 				}
