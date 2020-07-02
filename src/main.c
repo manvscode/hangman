@@ -1,5 +1,4 @@
 #include <stdio.h>
-//#include <wchar.h>
 #include <ctype.h>
 #include <string.h>
 #include <locale.h>
@@ -7,6 +6,8 @@
 #include <xtd/time.h>
 #include <signal.h>
 #include <unistd.h>
+
+#define LETTERS_COUNT 26
 
 typedef enum game_state {
 	TITLE,
@@ -19,7 +20,7 @@ typedef enum game_state {
 typedef struct app {
 	bool quit;
 	game_state_t state;
-	bool chosen_letters[26];
+	bool chosen_letters[LETTERS_COUNT];
 	char word[16];
 	int moves_left;
 	int letters_discovered;
@@ -203,7 +204,7 @@ void draw_game(app_t* app)
 		for( int x = 0; x < 6; x++)
 		{
 			int idx = y * 6 + x;
-			if( idx >= 26 ) break;
+			if( idx >= LETTERS_COUNT ) break;
 
 			if( app->chosen_letters[idx] )
 			{
@@ -385,25 +386,6 @@ void draw_game_over(app_t* app)
 	console_goto(stdout, text_x, text_y + 20); printf("          Press any key to continue.                \n");
 	console_reset_fg_color(stdout);
 
-#if 0
-	console_goto(stdout, 30, 1);
-	printf("__   __                _ _          _   _           \n");
-	printf("\\ \\ / /               | (_)        | | | |          \n");
-	printf(" \\ V /___  _   _    __| |_  ___  __| | | |__  _   _ \n");
-	printf("  \\ // _ \\| | | |  / _` | |/ _ \\/ _` | | '_ \\| | | |\n");
-	printf("  | | (_) | |_| | | (_| | |  __/ (_| | | |_) | |_| |\n");
-	printf("  \\_/\\___/ \\__,_|  \\__,_|_|\\___|\\__,_| |_.__/ \\__, |\n");
-	printf("                                               __/ |\n");
-	printf("     _                       _                |___/ \n");
-	printf("    | |                     (_)                     \n");
-	printf("    | |__   __ _ _ __   __ _ _ _ __   __ _          \n");
-	printf("    | '_ \\ / _` | '_ \\ / _` | | '_ \\ / _` |         \n");
-	printf("    | | | | (_| | | | | (_| | | | | | (_| |_        \n");
-	printf("    |_| |_|\\__,_|_| |_|\\__, |_|_| |_|\\__, (_)       \n");
-	printf("                        __/ |         __/ |         \n");
-	printf("                       |___/         |___/          \n");
-	printf("                                                    \n");
-#endif
 	getchar();
 	app->quit = true;
 }
@@ -452,8 +434,6 @@ void draw_game_won(app_t* app)
 	console_goto(stdout, cowboy_x, cowboy_y + 15);  printf("     /_\\  /_\\\n");
 
 
-
-
 	console_fg_color_8(stdout, CONSOLE_COLOR8_BRIGHT_MAGENTA);
 	console_goto(stdout, text_x, text_y + 20); printf("          Press any key to continue.                \n");
 	console_reset_fg_color(stdout);
@@ -470,9 +450,8 @@ int main( int argc, char* argv[] )
 		.letters_discovered = 0,
 	};
 
-
 	strcpy(app.word, "GENIUS");
-	memset( app.chosen_letters, 0, sizeof(bool) * 16 );
+	memset( app.chosen_letters, 0, sizeof(bool) * LETTERS_COUNT );
 
 	setlocale(LC_ALL, "");
 
