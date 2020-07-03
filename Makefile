@@ -1,11 +1,11 @@
 
-#CFLAGS = -std=c11 -D_DEFAULT_SOURCE -O0 -g -I /usr/local/include -I extern/include/ -I extern/include/collections-1.0.0/ -I extern/include/xtd-1.0.0/
-CFLAGS = -std=c11 -D_DEFAULT_SOURCE -O2 -I /usr/local/include -I extern/include/collections-1.0.0/ -I extern/include/xtd-1.0.0/
+CFLAGS = -std=c11 -D_DEFAULT_SOURCE -O0 -g -I /usr/local/include -I extern/include/ -I extern/include/collections-1.0.0/ -I extern/include/xtd-1.0.0/
+#CFLAGS = -std=c11 -D_DEFAULT_SOURCE -O2 -I /usr/local/include -I extern/include/collections-1.0.0/ -I extern/include/xtd-1.0.0/
 LDFLAGS = -lm extern/lib/libxtd.a extern/lib/libcollections.a -L /usr/local/lib -L extern/lib/ -L extern/libcollections/lib/
 CWD = $(shell pwd)
 BIN_NAME = hangman
 
-SOURCES = src/main.c
+SOURCES = src/main.c src/dict.c src/hangman.c
 
 all: extern/libxtd extern/libcollections bin/$(BIN_NAME)
 
