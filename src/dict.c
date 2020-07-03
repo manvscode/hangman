@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-const char* WORDS[] = {
+const char* DICTIONARY[] = {
 	"ACHED",
 	"ACHES",
 	"ACHOO",
@@ -48682,4 +48682,4 @@ const char* WORDS[] = {
 	"VENERATED",
 };
 
-const size_t WORDS_COUNT = sizeof(WORDS) / sizeof(WORDS[0]);
+const size_t DICTIONARY_SIZE = sizeof(DICTIONARY) / sizeof(DICTIONARY[0]);

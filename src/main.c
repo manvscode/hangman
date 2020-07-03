@@ -1,15 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <time.h>
 #include <xtd/console.h>
 #include "hangman.h"
 
-extern const char* WORDS[];
-extern const size_t WORDS_COUNT;
+extern const char* DICTIONARY[];
+extern const size_t DICTIONARY_SIZE;
 
 int main( int argc, char* argv[] )
 {
-	hangman_t* game = hangman_create( WORDS, WORDS_COUNT );
+	srand(time(NULL));
+	const char* random_word = DICTIONARY[rand() % DICTIONARY_SIZE];
+
+	hangman_t* game = hangman_create( random_word );
 	if( !game ) return -1;
 
 	setlocale(LC_ALL, "");

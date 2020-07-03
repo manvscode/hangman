@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <time.h>
 #include <xtd/console.h>
 #include <xtd/time.h>
 #include <signal.h>
@@ -42,8 +41,10 @@ struct hangman {
 	int letters_discovered;
 };
 
-hangman_t* hangman_create(const char* dictionary[], size_t dictionary_size )
+hangman_t* hangman_create(const char* random_word)
 {
+	if( !random_word ) return NULL;
+
 	hangman_t* game = malloc( sizeof(hangman_t) );
 
 	if( game )
@@ -55,9 +56,7 @@ hangman_t* hangman_create(const char* dictionary[], size_t dictionary_size )
 			.letters_discovered = 0,
 		};
 
-		srand( time(NULL) );
-
-		strcpy( game->word, dictionary[rand() % dictionary_size] );
+		strcpy(game->word, random_word);
 		game->word_len = strlen(game->word);
 		game->winning_moves_count = count_unique_letters(game->word, game->word_len);
 
@@ -259,7 +258,6 @@ void hangman_draw_chosen_letters(hangman_t* game, int x, int y)
 	console_fg_color_8(stdout, CONSOLE_COLOR8_GREY_10);
 	console_curved_box(x, y, 8, 7);
 	console_reset_fg_color(stdout);
-	console_fg_color_8(stdout, CONSOLE_COLOR8_YELLOW);
 	for( int j = 0; j < 5; j++)
 	{
 		for( int i = 0; i < 6; i++)
@@ -267,15 +265,24 @@ void hangman_draw_chosen_letters(hangman_t* game, int x, int y)
 			int idx = j * 6 + i;
 			if( idx >= LETTERS_COUNT ) break;
 
+			console_goto(stdout, x + i + 1, y + j + 1);
 			if( game->chosen_letters[idx] )
 			{
-				console_goto(stdout, x + i + 1, y + j + 1);
+				console_fg_color_8(stdout, CONSOLE_COLOR8_GREY_07);
+				//console_strikethrough_begin(stdout);
 				printf( "%c", 'A' + idx);
+				//console_strikethrough_end(stdout);
+				console_reset_fg_color(stdout);
+			}
+			else
+			{
+				console_fg_color_8(stdout, CONSOLE_COLOR8_BRIGHT_YELLOW);
+				printf( "%c", 'A' + idx);
+				console_reset_fg_color(stdout);
 			}
 
 		}
 	}
-	console_reset_fg_color(stdout);
 }
 
 /*
@@ -313,8 +320,13 @@ void hangman_draw_stick_man(hangman_t* game, int x, int y)
 		switch( i )
 		{
 			case 0:
+				#if 0
+				console_goto(stdout, x-1, y);
+				printf("😨");
+				#else
 				console_goto(stdout, x, y);
 				printf("0");
+				#endif
 				break;
 			case 1:
 				console_goto(stdout, x, y + 1);
@@ -345,21 +357,22 @@ void hangman_draw_game(hangman_t* game)
 {
 	console_clear_screen_all( stdout );
 
-	console_goto(stdout, 1, 1);
-
-	printf("          ______________\n");
-	printf("         |             |\n");
-	printf("         |              \n");
-	printf("         |              \n");
-	printf("         |              \n");
-	printf("         |___________     ___\n");
-	printf("         |          |     | |_\n");
-	printf("         |          |     |   |_\n");
-	printf("         |__________|_____|_____|\n");
+	console_goto(stdout, 1, 2);
+	console_fg_color_8(stdout, CONSOLE_COLOR8_GREY_19);
+	printf("         ┏━━━━━━━━━━━━━┑         \n");
+	printf("         ┃             │         \n");
+	printf("         ┃                       \n");
+	printf("         ┃                       \n");
+	printf("         ┃                       \n");
+	printf("         ┣━━━━━━━━━━┓     ┏━┓     \n");
+	printf("         ┃          ┃     ┃ ┗━┓  \n");
+	printf("         ┃          ┃     ┃   ┗━┓\n");
+	printf("         ┗━━━━━━━━━━┻━━━━━┻━━━━━┛\n");
+	console_reset_fg_color(stdout);
 
 	hangman_draw_chosen_letters(game, 45, 1);
 	hangman_draw_word_progress(game, 20, 12);
-	hangman_draw_stick_man(game, 24, 3);
+	hangman_draw_stick_man(game, 24, 4);
 
 	console_fg_color_8(stdout, CONSOLE_COLOR8_GREY_10);
 	console_curved_box(12, 15, 23, 3);
@@ -378,7 +391,6 @@ void hangman_draw_game(hangman_t* game)
 	console_fg_color_8(stdout, CONSOLE_COLOR8_BRIGHT_GREEN);
 	printf("Quit (ESC)");
 	console_reset_fg_color(stdout);
-
 
 	char key;
 	if( scanf("%c", &key ) == 1 )
